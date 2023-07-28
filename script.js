@@ -8,10 +8,10 @@ const Player = (mark) => {
     return { mark }
 }
 
-const x = Player('x')
-const o = Player('o')
+const X = Player('x')
+const O = Player('o')
 
-function handleClick(e) {
+function gameController(e) {
     // Place mark
     const cell = e.target
     gameModule.placeMark(cell)
@@ -32,12 +32,12 @@ let gameModule = (function gameModule() {
     function start() {
         _gameboard = [[...Array(3)], [...Array(3)], [...Array(3)]]
         _oTurn = false
-        _currentTurn = x.mark
-        board.classList.add(x.mark)
+        _currentTurn = X.mark
+        board.classList.add(X.mark)
         cellElements.forEach((cell) => {
-            cell.addEventListener('click', handleClick, { once: true })
-            cell.classList.remove(x.mark)
-            cell.classList.remove(o.mark)
+            cell.addEventListener('click', gameController, { once: true })
+            cell.classList.remove(X.mark)
+            cell.classList.remove(O.mark)
         })
     }
 
@@ -45,23 +45,23 @@ let gameModule = (function gameModule() {
         const { row } = cell.dataset
         const { col } = cell.dataset
         if (_oTurn) {
-            cell.classList.add(o.mark)
-            _gameboard[row][col] = o.mark
+            cell.classList.add(O.mark)
+            _gameboard[row][col] = O.mark
         } else {
-            cell.classList.add(x.mark)
-            _gameboard[row][col] = x.mark
+            cell.classList.add(X.mark)
+            _gameboard[row][col] = X.mark
         }
     }
 
     function switchTurns() {
         if (_oTurn) {
-            board.classList.remove(o.mark)
-            board.classList.add(x.mark)
-            _currentTurn = x.mark
+            board.classList.remove(O.mark)
+            board.classList.add(X.mark)
+            _currentTurn = X.mark
         } else {
-            board.classList.remove(x.mark)
-            board.classList.add(o.mark)
-            _currentTurn = o.mark
+            board.classList.remove(X.mark)
+            board.classList.add(O.mark)
+            _currentTurn = O.mark
         }
         _oTurn = !_oTurn
     }
@@ -118,8 +118,8 @@ let gameModule = (function gameModule() {
     function restart() {
         winnerText.removeChild(winnerText.lastChild)
         winningMessage.classList.remove('show')
-        board.classList.remove(x.mark)
-        board.classList.remove(o.mark)
+        board.classList.remove(X.mark)
+        board.classList.remove(O.mark)
         start()
     }
 
