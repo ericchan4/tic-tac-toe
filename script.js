@@ -17,20 +17,20 @@ function handleClick(e) {
     gameModule.placeMark(cell)
     // Check for win
     gameModule.checkWin()
-    gameModule.displayWinner()
     // Check for draw
+    gameModule.checkDraw()
+    gameModule.displayWinner()
     // Switch turns
     gameModule.switchTurns()
 }
 
-let gameModule = (function () {
+let gameModule = (function gameModule() {
     let gameboard
     let oTurn
     let currentTurn
 
     function start() {
         gameboard = [[...Array(3)], [...Array(3)], [...Array(3)]]
-        console.log(gameboard)
         oTurn = false
         currentTurn = x.mark
         board.classList.add(x.mark)
@@ -81,7 +81,7 @@ let gameModule = (function () {
             [gameboard[2][0], gameboard[1][1], gameboard[0][2]], // 7
         ]
         const allEqual = (arr) =>
-            arr.every((val) => val === arr[0] && val !== undefined)
+            arr.every((val) => val === arr[0] && typeof val !== 'undefined')
         return (
             allEqual(winCombo[0]) ||
             allEqual(winCombo[1]) ||
@@ -100,9 +100,20 @@ let gameModule = (function () {
             winnerText.appendChild(content)
             winningMessage.classList.add('show')
         }
+        if (checkDraw()) {
+            const content = document.createTextNode("It's a draw!")
+            winnerText.appendChild(content)
+            winningMessage.classList.add('show')
+        }
     }
 
-    function checkDraw() {}
+    function checkDraw() {
+        return (
+            !gameboard[0].includes(undefined) &&
+            !gameboard[1].includes(undefined) &&
+            !gameboard[2].includes(undefined)
+        )
+    }
 
     function restart() {
         winnerText.removeChild(winnerText.lastChild)
@@ -120,6 +131,7 @@ let gameModule = (function () {
         switchTurns,
         checkWin,
         displayWinner,
+        checkDraw,
         restart,
     }
 })()
