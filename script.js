@@ -25,14 +25,14 @@ function handleClick(e) {
 }
 
 let gameModule = (function gameModule() {
-    let gameboard
-    let oTurn
-    let currentTurn
+    let _gameboard
+    let _oTurn
+    let _currentTurn
 
     function start() {
-        gameboard = [[...Array(3)], [...Array(3)], [...Array(3)]]
-        oTurn = false
-        currentTurn = x.mark
+        _gameboard = [[...Array(3)], [...Array(3)], [...Array(3)]]
+        _oTurn = false
+        _currentTurn = x.mark
         board.classList.add(x.mark)
         cellElements.forEach((cell) => {
             cell.addEventListener('click', handleClick, { once: true })
@@ -44,41 +44,41 @@ let gameModule = (function gameModule() {
     function placeMark(cell) {
         const { row } = cell.dataset
         const { col } = cell.dataset
-        if (oTurn) {
+        if (_oTurn) {
             cell.classList.add(o.mark)
-            gameboard[row][col] = o.mark
+            _gameboard[row][col] = o.mark
         } else {
             cell.classList.add(x.mark)
-            gameboard[row][col] = x.mark
+            _gameboard[row][col] = x.mark
         }
     }
 
     function switchTurns() {
-        if (oTurn) {
+        if (_oTurn) {
             board.classList.remove(o.mark)
             board.classList.add(x.mark)
-            currentTurn = x.mark
+            _currentTurn = x.mark
         } else {
             board.classList.remove(x.mark)
             board.classList.add(o.mark)
-            currentTurn = o.mark
+            _currentTurn = o.mark
         }
-        oTurn = !oTurn
+        _oTurn = !_oTurn
     }
 
     function checkWin() {
         const winCombo = [
             // rows
-            [gameboard[0][0], gameboard[0][1], gameboard[0][2]], // 0
-            [gameboard[1][0], gameboard[1][1], gameboard[1][2]], // 1
-            [gameboard[2][0], gameboard[2][1], gameboard[2][2]], // 2
+            [_gameboard[0][0], _gameboard[0][1], _gameboard[0][2]], // 0
+            [_gameboard[1][0], _gameboard[1][1], _gameboard[1][2]], // 1
+            [_gameboard[2][0], _gameboard[2][1], _gameboard[2][2]], // 2
             // cols
-            [gameboard[0][0], gameboard[1][0], gameboard[2][0]], // 3
-            [gameboard[0][1], gameboard[1][1], gameboard[2][1]], // 4
-            [gameboard[0][2], gameboard[1][2], gameboard[2][2]], // 5
+            [_gameboard[0][0], _gameboard[1][0], _gameboard[2][0]], // 3
+            [_gameboard[0][1], _gameboard[1][1], _gameboard[2][1]], // 4
+            [_gameboard[0][2], _gameboard[1][2], _gameboard[2][2]], // 5
             // diag
-            [gameboard[0][0], gameboard[1][1], gameboard[2][2]], // 6
-            [gameboard[2][0], gameboard[1][1], gameboard[0][2]], // 7
+            [_gameboard[0][0], _gameboard[1][1], _gameboard[2][2]], // 6
+            [_gameboard[2][0], _gameboard[1][1], _gameboard[0][2]], // 7
         ]
         const allEqual = (arr) =>
             arr.every((val) => val === arr[0] && typeof val !== 'undefined')
@@ -96,7 +96,7 @@ let gameModule = (function gameModule() {
 
     function displayWinner() {
         if (checkWin()) {
-            const content = document.createTextNode(`${currentTurn}'s win!`)
+            const content = document.createTextNode(`${_currentTurn}'s win!`)
             winnerText.appendChild(content)
             winningMessage.classList.add('show')
         }
@@ -109,9 +109,9 @@ let gameModule = (function gameModule() {
 
     function checkDraw() {
         return (
-            !gameboard[0].includes(undefined) &&
-            !gameboard[1].includes(undefined) &&
-            !gameboard[2].includes(undefined)
+            !_gameboard[0].includes(undefined) &&
+            !_gameboard[1].includes(undefined) &&
+            !_gameboard[2].includes(undefined)
         )
     }
 
@@ -124,8 +124,6 @@ let gameModule = (function gameModule() {
     }
 
     return {
-        gameboard,
-        currentTurn,
         start,
         placeMark,
         switchTurns,
