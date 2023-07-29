@@ -12,15 +12,18 @@ const X = Player('x')
 const O = Player('o')
 
 function gameController(e) {
-    // Place mark
     const cell = e.target
     gameModule.placeMark(cell)
-    // Check for win
     gameModule.checkWin()
-    // Check for draw
     gameModule.checkDraw()
-    gameModule.displayWinner()
-    // Switch turns
+    if (gameModule.displayWinner()) {
+        return
+    }
+    gameModule.switchTurns()
+    gameModule.aiMove()
+    gameModule.checkWin()
+    gameModule.checkDraw()
+    if (gameModule.displayWinner()) return
     gameModule.switchTurns()
 }
 
@@ -30,7 +33,11 @@ let gameModule = (function gameModule() {
     let _currentTurn
 
     function start() {
-        _gameboard = [[...Array(3)], [...Array(3)], [...Array(3)]]
+        _gameboard = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', ''],
+        ]
         _oTurn = false
         _currentTurn = X.mark
         board.classList.add(X.mark)
@@ -51,6 +58,35 @@ let gameModule = (function gameModule() {
             cell.classList.add(X.mark)
             _gameboard[row][col] = X.mark
         }
+    }
+
+    function aiMove() {
+        let aiOptions = []
+        for (let i = 0; i <= 2; i += 1) {
+            for (let j = 0; j <= 2; j += 1) {
+                if (_gameboard[i][j] === '') {
+                    const coord = {
+                        airow: i,
+                        aicol: j,
+                    }
+                    aiOptions.push(coord)
+                }
+            }
+        }
+        const randomIndex = Math.floor(Math.random() * aiOptions.length)
+        console.log(randomIndex)
+        console.log(aiOptions)
+
+        const { airow } = aiOptions[randomIndex]
+        const { aicol } = aiOptions[randomIndex]
+        console.log(`ai row: ${airow} \n ai col:${aicol}`)
+        const aiCell = document.querySelector(
+            `[data-row="${airow}"][data-col="${aicol}"]`
+        )
+        console.log(aiCell)
+        // placeMark(aiCell)
+        aiCell.classList.add(O.mark)
+        _gameboard[airow][aicol] = O.mark
     }
 
     function switchTurns() {
@@ -81,7 +117,7 @@ let gameModule = (function gameModule() {
             [_gameboard[2][0], _gameboard[1][1], _gameboard[0][2]], // 7
         ]
         const allEqual = (arr) =>
-            arr.every((val) => val === arr[0] && typeof val !== 'undefined')
+            arr.every((val) => val === arr[0] && val !== '')
         return (
             allEqual(winCombo[0]) ||
             allEqual(winCombo[1]) ||
@@ -99,20 +135,26 @@ let gameModule = (function gameModule() {
             const content = document.createTextNode(`${_currentTurn}'s win!`)
             winnerText.appendChild(content)
             winningMessage.classList.add('show')
+            return true
         }
         if (checkDraw()) {
             const content = document.createTextNode("It's a draw!")
             winnerText.appendChild(content)
             winningMessage.classList.add('show')
+            return true
         }
+        return false
     }
 
     function checkDraw() {
-        return (
-            !_gameboard[0].includes(undefined) &&
-            !_gameboard[1].includes(undefined) &&
-            !_gameboard[2].includes(undefined)
-        )
+        if (!checkWin()) {
+            return (
+                !_gameboard[0].includes('') &&
+                !_gameboard[1].includes('') &&
+                !_gameboard[2].includes('')
+            )
+        }
+        return false
     }
 
     function restart() {
@@ -126,6 +168,7 @@ let gameModule = (function gameModule() {
     return {
         start,
         placeMark,
+        aiMove,
         switchTurns,
         checkWin,
         displayWinner,
