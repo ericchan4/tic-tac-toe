@@ -16,9 +16,7 @@ function gameController(e) {
     gameModule.placeMark(cell)
     gameModule.checkWin()
     gameModule.checkDraw()
-    if (gameModule.displayWinner()) {
-        return
-    }
+    if (gameModule.displayWinner()) return
     gameModule.switchTurns()
     gameModule.aiMove()
     gameModule.checkWin()
@@ -60,33 +58,31 @@ let gameModule = (function gameModule() {
         }
     }
 
-    function aiMove() {
-        let aiOptions = []
+    function getValidMoves() {
+        const validMoves = []
         for (let i = 0; i <= 2; i += 1) {
             for (let j = 0; j <= 2; j += 1) {
                 if (_gameboard[i][j] === '') {
                     const coord = {
-                        airow: i,
-                        aicol: j,
+                        row: i,
+                        col: j,
                     }
-                    aiOptions.push(coord)
+                    validMoves.push(coord)
                 }
             }
         }
-        const randomIndex = Math.floor(Math.random() * aiOptions.length)
-        console.log(randomIndex)
-        console.log(aiOptions)
+        return validMoves
+    }
 
-        const { airow } = aiOptions[randomIndex]
-        const { aicol } = aiOptions[randomIndex]
-        console.log(`ai row: ${airow} \n ai col:${aicol}`)
-        const aiCell = document.querySelector(
-            `[data-row="${airow}"][data-col="${aicol}"]`
+    function aiMove() {
+        const randomIndex = Math.floor(Math.random() * getValidMoves().length)
+
+        const { row } = getValidMoves()[randomIndex]
+        const { col } = getValidMoves()[randomIndex]
+        const cell = document.querySelector(
+            `[data-row="${row}"][data-col="${col}"]`
         )
-        console.log(aiCell)
-        // placeMark(aiCell)
-        aiCell.classList.add(O.mark)
-        _gameboard[airow][aicol] = O.mark
+        placeMark(cell)
     }
 
     function switchTurns() {
@@ -174,6 +170,7 @@ let gameModule = (function gameModule() {
         displayWinner,
         checkDraw,
         restart,
+        getValidMoves,
     }
 })()
 
