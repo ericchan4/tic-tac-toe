@@ -13,6 +13,9 @@ const O = Player('o')
 
 function gameController(e) {
     const cell = e.target
+    if (cell.classList.contains('o')) {
+        cell.stopPropagation()
+    }
     gameModule.placeMark(cell)
     gameModule.checkWin()
     gameModule.checkDraw()
