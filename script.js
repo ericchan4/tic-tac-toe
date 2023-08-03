@@ -97,7 +97,7 @@ let gameModule = (function gameModule() {
         }
         _oTurn = !_oTurn
     }
-
+    //
     function checkWin() {
         const winCombo = [
             // rows
