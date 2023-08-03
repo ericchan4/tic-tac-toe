@@ -52,10 +52,10 @@ let gameModule = (function gameModule() {
     function minimax(newBoard, player) {
         const availSpots = getValidMoves()
 
-        if (checkWin() && player === X) {
+        if (winner(newBoard, X)) {
             return { score: -10 }
         }
-        if (checkWin() && player === O) {
+        if (winner(newBoard, O)) {
             return { score: 10 }
         }
         if (availSpots.length === 0) {
@@ -95,7 +95,7 @@ let gameModule = (function gameModule() {
         let bestMove
         // if AI turn, it will loop over moves to search for one with higest score (e.g. most optimum move for ai)
         if (player === O) {
-            let bestScore = -1000
+            let bestScore = -Infinity
             for (let i = 0; i < moves.length; i += 1) {
                 if (moves[i].score > bestScore) {
                     bestScore = moves[i].score
@@ -104,7 +104,7 @@ let gameModule = (function gameModule() {
             }
         } else {
             // else loop over move with lowest score (aka most optimum move for human and least optimum for AI)
-            let bestScore = 1000
+            let bestScore = Infinity
             for (let i = 0; i < moves.length; i += 1) {
                 if (moves[i].score < bestScore) {
                     bestScore = moves[i].score
@@ -144,21 +144,13 @@ let gameModule = (function gameModule() {
     }
 
     function aiMove() {
-        const randomIndex = Math.floor(Math.random() * getValidMoves().length)
+        const bestMove = minimax(_gameboard, O)
+        const row = bestMove.index[0]
+        const col = bestMove.index[1]
 
-        // const bestMove = minimax(_gameboard, O)
-        // const row = bestMove.index[0]
-        // const col = bestMove.index[1]
-        // console.log(bestMove)
-
-        const { row } = getValidMoves()[randomIndex]
-        const { col } = getValidMoves()[randomIndex]
         const cell = document.querySelector(
             `[data-row="${row}"][data-col="${col}"]`
         )
-        // const cell = document.querySelector(
-        //     `[data-row="${row}"][data-col="${col}"]`
-        // )
         placeMark(cell)
     }
 
@@ -174,7 +166,37 @@ let gameModule = (function gameModule() {
         }
         _oTurn = !_oTurn
     }
-    //
+    function winner(currBoard, player) {
+        if (
+            (currBoard[0][0] === player.mark &&
+                currBoard[0][1] === player.mark &&
+                currBoard[0][2] === player.mark) ||
+            (currBoard[1][0] === player.mark &&
+                currBoard[1][1] === player.mark &&
+                currBoard[1][2] === player.mark) ||
+            (currBoard[2][0] === player.mark &&
+                currBoard[2][1] === player.mark &&
+                currBoard[2][2] === player.mark) ||
+            (currBoard[0][0] === player.mark &&
+                currBoard[1][0] === player.mark &&
+                currBoard[2][0] === player.mark) ||
+            (currBoard[0][1] === player.mark &&
+                currBoard[1][1] === player.mark &&
+                currBoard[2][1] === player.mark) ||
+            (currBoard[0][2] === player.mark &&
+                currBoard[1][2] === player.mark &&
+                currBoard[2][2] === player.mark) ||
+            (currBoard[0][0] === player.mark &&
+                currBoard[1][1] === player.mark &&
+                currBoard[2][2] === player.mark) ||
+            (currBoard[2][0] === player.mark &&
+                currBoard[1][1] === player.mark &&
+                currBoard[0][2] === player.mark)
+        ) {
+            return true
+        }
+        return false
+    }
     function checkWin() {
         const winCombo = [
             // rows
