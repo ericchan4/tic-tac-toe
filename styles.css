@@ -214,12 +214,12 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.tic-tac-toe {
+.tic-tac-toe-container {
     display: flex;
     justify-content: center;
 }
 
-.pve-toggle {
+.slider-container {
     display: flex;
     position: absolute;
     top: calc(100vh * 0.15);
