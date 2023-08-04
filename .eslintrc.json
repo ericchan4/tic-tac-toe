@@ -15,6 +15,7 @@
         "no-use-before-define": "off",
         "prefer-const": "off",
         "arrow-body-style": "off",
-        "no-shadow": "warn"
+        "no-shadow": "warn",
+        "no-param-reassign": "off"
     }
 }
