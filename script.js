@@ -3,6 +3,7 @@ const cellElements = document.querySelectorAll('[data-cell]')
 const winningMessage = document.getElementById('winningMessage')
 const winnerText = document.querySelector('[data-winning-message-text]')
 const restartButton = document.getElementById('restartButton')
+const pve = document.getElementById('pve-toggle')
 
 const Player = (mark) => {
     return { mark }
@@ -21,11 +22,13 @@ function gameController(e) {
     gameModule.checkDraw()
     if (gameModule.displayWinner()) return
     gameModule.switchTurns()
-    gameModule.aiMove()
-    gameModule.checkWin(gameModule.gameboard, gameModule.currentTurn)
-    gameModule.checkDraw()
-    if (gameModule.displayWinner()) return
-    gameModule.switchTurns()
+    if (pve.checked) {
+        gameModule.aiMove()
+        gameModule.checkWin(gameModule.gameboard, gameModule.currentTurn)
+        gameModule.checkDraw()
+        if (gameModule.displayWinner()) return
+        gameModule.switchTurns()
+    }
 }
 
 let gameModule = (function gameModule() {
