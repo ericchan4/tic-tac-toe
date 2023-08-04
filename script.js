@@ -40,6 +40,12 @@ let gameModule = (function gameModule() {
     let currentTurn = playerX
     let _oTurn
 
+    function toggleComputer() {
+        pve.addEventListener('change', () => {
+            start()
+        })
+    }
+
     function start() {
         gameboard = [
             ['', '', ''],
@@ -48,11 +54,12 @@ let gameModule = (function gameModule() {
         ]
         _oTurn = false
         currentTurn = playerX
+        board.classList.remove(playerO.mark)
         board.classList.add(playerX.mark)
         cellElements.forEach((cell) => {
-            cell.addEventListener('click', gameController, { once: true })
             cell.classList.remove(playerX.mark)
             cell.classList.remove(playerO.mark)
+            cell.addEventListener('click', gameController, { once: true })
         })
     }
 
@@ -236,6 +243,7 @@ let gameModule = (function gameModule() {
     return {
         gameboard,
         currentTurn,
+        toggleComputer,
         start,
         placeMark,
         aiMove,
@@ -248,4 +256,5 @@ let gameModule = (function gameModule() {
 })()
 
 gameModule.start()
+gameModule.toggleComputer()
 restartButton.addEventListener('click', gameModule.restart)
