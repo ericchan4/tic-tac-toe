@@ -94,8 +94,8 @@ let gameModule = (function gameModule() {
     function minimax(newBoard, player, depth) {
         const availSpots = getValidMoves()
 
-        if (checkWin(newBoard, playerX)) return { score: -10 }
-        if (checkWin(newBoard, playerO)) return { score: 10 }
+        if (checkWin(newBoard, playerX)) return { score: -10 - depth }
+        if (checkWin(newBoard, playerO)) return { score: 10 - depth }
         if (availSpots.length === 0) return { score: 0 }
 
         const moves = []
@@ -113,10 +113,10 @@ let gameModule = (function gameModule() {
             // collects the score from calling minimax on the opponent of current player
             if (player === playerO) {
                 const result = minimax(newBoard, playerX, depth + 1)
-                move.score = result.score - depth
+                move.score = result.score
             } else {
                 const result = minimax(newBoard, playerO, depth + 1)
-                move.score = result.score - depth
+                move.score = result.score
             }
 
             // resets the spot to empty
